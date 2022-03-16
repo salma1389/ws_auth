@@ -29,11 +29,47 @@ exports.signUp = async (req, res) => {
       user: {
         id: newUser._id,
         email: newUser.email,
-        password:newUser.password,
-        fullName:newUser.fullName
+        password: newUser.password,
+        fullName: newUser.fullName,
       },
     });
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
+
+exports.login = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const theUser = await oussema.findOne({ email });
+    if (!theUser) {
+      res.status(402).json({ msg: "invalid email or password" });
+    }
+    const isMatch = await bc.compare(password, theUser.password);
+    if (!isMatch) {
+      res.status(402).json({ msg: "invalid email or password" });
+    }
+    const payload = {
+      id: theUser._id,
+      email: theUser.email,
+      fullName: theUser,
+    };
+    const token = jwt.sign(payload, secret);
+    res.status(202).json({
+      token,
+      user: {
+        id: theUser._id,
+        email: theUser.email,
+        password: theUser.password,
+        fullName: theUser.fullName,
+      },
+    });
+  } catch (error) {
+    res.status(501).json({ msg: error.message });
+  }
+};
+
+
+exports.getUser=(req,res)=>{
+  res.send(req.user)
+}
