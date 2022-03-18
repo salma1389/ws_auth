@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {Form,Button} from "react-bootstrap"
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { userSignUp } from "../redux/actions";
 const SignUp = () => {
 const {loading}=useSelector(state=>state)
@@ -38,6 +39,10 @@ const {loading}=useSelector(state=>state)
         </Button>
       </Form>
       }
+      <Link to="/login"><p>Do you have an account  already ?
+        <br/>
+        Go to Login
+      </p></Link>
     </div>
   );
 };
